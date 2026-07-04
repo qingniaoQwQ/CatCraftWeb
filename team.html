@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>CatCraft Team</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="icon" href="images/favicon.png">
+</head>
+<body>
+
+<div class="lang-switcher" id="langSwitcher">
+    <button class="lang-btn active" data-lang="zh">中</button>
+    <button class="lang-btn" data-lang="en">EN</button>
+</div>
+
+<div class="full-bg">
+    <video autoplay muted loop playsinline poster="images/backgrounds/team_fallback.jpg">
+        <source src="images/backgrounds/team_bg.mp4" type="video/mp4">
+        <img src="images/backgrounds/team_fallback.jpg" alt="背景">
+    </video>
+</div>
+
+<div class="tools-layout">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <img src="images/team/team-logo.png" class="sidebar-logo" alt="团队logo">
+        </div>
+        <button class="tool-btn active" data-team="intro" data-i18n="team_intro">团队介绍</button>
+        <button class="tool-btn" data-team="membersCS2" data-i18n="team_membersCS2">核心成员（CS2分部）</button>
+        <button class="tool-btn" data-team="membersMC" data-i18n="team_membersMC">核心成员</button>
+        <button class="tool-btn" data-team="news" data-i18n="team_news">团队新闻</button>
+        <button class="tool-btn" data-team="history" data-i18n="team_history">发展历程</button>
+        <a class="back-home" href="index.html" data-i18n="back_home">返回首页</a>
+    </aside>
+
+    <main class="tool-content">
+        <div id="teamContent"></div>
+    </main>
+</div>
+
+<script src="js/main.js"></script>
+<script src="js/team.js"></script>
+</body>
+</html>

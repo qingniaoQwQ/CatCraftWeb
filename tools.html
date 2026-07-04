@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<title>工具库 | By QingNiao</title>
+<link rel="icon" href="images/favicon.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="lang-switcher" id="langSwitcher">
+    <button class="lang-btn active" data-lang="zh">中</button>
+    <button class="lang-btn" data-lang="en">EN</button>
+</div>
+
+<div class="full-bg">
+    <video autoplay muted loop playsinline poster="images/section/home_fallback.jpg">
+        <source src="images/backgrounds/yuuka_pajama.mp4" type="video/mp4">
+        <img src="images/section/home_fallback.jpg" alt="背景">
+    </video>
+</div>
+
+<div class="tools-layout">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2 data-i18n="tools_title">工具库</h2>
+        </div>
+        <button class="tool-btn active" data-tool="Steam" data-i18n="tool_Steam">Steam</button>
+        <button class="tool-btn" data-tool="AMD" data-i18n="tool_AMD">AMD驱动</button>
+        <button class="tool-btn" data-tool="nvidia" data-i18n="tool_nvidia">nvidia驱动</button>
+        <button class="tool-btn" data-tool="live2d" data-i18n="tool_live2d">Live2D</button>
+        <button class="tool-btn" data-tool="steamtools" data-i18n="tool_steamtools">SteamTools</button>
+        <a href="index.html" class="back-home" data-i18n="back_home">返回首页</a>
+    </aside>
+
+    <main class="tool-content">
+        <div class="tool-banner">
+            <img id="sliderImage" src="" alt="工具展示图">
+        </div>
+        <div class="tool-header">
+            <h1 id="toolTitle"></h1>
+            <p id="toolDesc"></p>
+        </div>
+        <div class="tool-buttons">
+            <a id="downloadBtn" href="#" target="_blank" class="btn" data-i18n="download_btn">下载工具</a>
+            <a id="officialBtn" href="#" target="_blank" class="btn-outline" data-i18n="official_btn">官方网站</a>
+        </div>
+        <div id="toolInfo" class="tool-info"></div>
+    </main>
+</div>
+
+<script src="js/main.js"></script>
+<script src="js/tools.js"></script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>QingNiao | 个人主页</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="icon" href="images/favicon.png">
+</head>
+<body>
+
+<!-- 语言切换按钮（右下角） -->
+<div class="lang-switcher" id="langSwitcher">
+    <button class="lang-btn active" data-lang="zh">中</button>
+    <button class="lang-btn" data-lang="en">EN</button>
+</div>
+
+<nav class="navbar">
+    <div class="logo">QingNiao</div>
+    <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">☰</button>
+    <ul id="navMenu">
+        <li><a href="#home" data-i18n="nav_home">首页</a></li>
+        <li><a href="#about" data-i18n="nav_about">关于我</a></li>
+        <li><a href="tools.html" data-i18n="nav_tools">工具介绍</a></li>
+        <li><a href="./CatCraftWeb/CatCraft.html" data-i18n="nav_server">CatCraft Server</a></li>
+        <li><a href="team.html" data-i18n="nav_team">我的团队</a></li>
+    </ul>
+</nav>
+
+<section id="home" class="hero">
+    <div class="section-bg">
+        <video autoplay muted loop playsinline poster="images/section/home_fallback.jpg">
+            <source src="images/section/home.mp4" type="video/mp4">
+            <img src="images/section/home_fallback.jpg" alt="背景">
+        </video>
+    </div>
+    <div class="hero-content">
+        <img src="images/QingNiao-index.png" class="avatar" alt="青鸟头像">
+        <h1>QingNiaoQaQ</h1>
+        <p data-i18n="hero_sub">Counter-Strike 2 · CatCraft Team · Ai · Live2D</p>
+        <a href="tools.html" class="btn" data-i18n="hero_btn">查看工具库</a>
+    </div>
+</section>
+
+<section id="about">
+    <div class="section-bg">
+        <img src="images/section/about_bg.jpg" alt="about background">
+    </div>
+    <div class="container">
+        <h2 data-i18n="about_title">关于我</h2>
+        <div class="card">
+            <p data-i18n="about_p1">你好，我是QingNiao。最近正在研究AI绘图、ComfyUI工作流、Live2D以及网页开发。</p>
+            <p data-i18n="about_p2">持续探索技术与艺术的结合点，分享实用工具与工作流。</p>
+        </div>
+    </div>
+</section>
+
+<section id="projects">
+    <div class="section-bg">
+        <video autoplay muted loop playsinline poster="images/section/home_fallback.jpg">
+            <source src="images/section/projects.mp4" type="video/mp4">
+            <img src="images/section/home_fallback.jpg" alt="背景">
+        </video>
+    </div>
+    <div class="container">
+        <h2 data-i18n="projects_title">项目展示</h2>
+        <div class="grid">
+            <div class="project" data-i18n="project_1">CatCraft MC Server<br><small>我的世界高版本Java小游戏服务端</small></div>
+            <div class="project" data-i18n="project_2">Github Web 代码<br><small>开源了一些由我本人主导的网页代码</small></div>
+            <div class="project" data-i18n="project_3">VapingCation Server (1.0.0-2.0.1)<br><small>我的世界Java 1.8.9 HvH 服务端</small></div>
+        </div>
+    </div>
+</section>
+
+<section id="contact">
+    <div class="section-bg">
+        <img src="images/section/contact_bg.jpg" alt="contact background">
+    </div>
+    <div class="container">
+        <h2 data-i18n="contact_title">联系方式</h2>
+        <div class="card">
+            <p>GitHub：<a href="https://github.com/qingniaoQwQ" target="_blank" style="color:#e592ff">Github-QingNiaoQaQ</a></p>
+            <p>BiliBili： <a href="https://space.bilibili.com/1622211276" target="_blank" style="color:#e592ff">BiliBili-QingNiaoQaQ</a></p>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <span data-i18n="footer">By QingNiao © 2026</span>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>

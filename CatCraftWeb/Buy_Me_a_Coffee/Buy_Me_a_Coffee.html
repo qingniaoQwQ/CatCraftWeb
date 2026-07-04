@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Buy Me a Coffee</title>
+    <link rel="icon" href="./images/favicon.png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&display=swap" rel="stylesheet" />
+    <style>
+        /* ===== 全局重置 & 变量 ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #ff7eb9;
+            --secondary: #7afcff;
+            --accent: #ff65a3;
+            --dark: #1a1a2e;
+            --light: #f9f9f9;
+            --glass: rgba(255, 255, 255, 0.08);
+            --border: rgba(255, 255, 255, 0.15);
+            --shadow: rgba(0, 0, 0, 0.25);
+            --radius: 20px;
+            --transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: 'M PLUS Rounded 1c', sans-serif;
+            background-color: var(--dark);
+            color: var(--light);
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: url('./DG/124177.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: rgba(26, 26, 46, 0.70);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ===== 通用容器 ===== */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px 24px 40px;
+        }
+
+        /* ===== 语言切换 ===== */
+        .lang-switch {
+            position: fixed;
+            top: 20px;
+            right: 24px;
+            z-index: 999;
+            display: flex;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.10);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 40px;
+            padding: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        .lang-btn {
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.55);
+            font-size: 0.85rem;
+            font-weight: 700;
+            padding: 6px 16px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: inherit;
+            letter-spacing: 0.3px;
+        }
+
+        .lang-btn:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .lang-btn.active {
+            color: #fff;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            box-shadow: 0 2px 12px rgba(255, 126, 185, 0.35);
+        }
+
+        /* ===== 头部 ===== */
+        header {
+            text-align: center;
+            padding: 60px 20px 30px;
+        }
+
+        .logo {
+            font-size: 3.2rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+            position: relative;
+            letter-spacing: -0.5px;
+        }
+
+        .logo i {
+            font-size: 2.6rem;
+            margin-right: 6px;
+            color: #d4a373;
+            background: none;
+            -webkit-background-clip: unset;
+            background-clip: unset;
+        }
+
+        .logo::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 4px;
+            border-radius: 4px;
+            background: linear-gradient(90deg, transparent, var(--primary), var(--secondary), transparent);
+        }
+
+        .subtitle {
+            font-size: 1.15rem;
+            margin-top: 28px;
+            opacity: 0.92;
+            max-width: 620px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.7;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .subtitle .heart {
+            color: var(--primary);
+            display: inline-block;
+            animation: pulse 1.6s ease-in-out infinite;
+        }
+
+        /* ===== 毛玻璃卡片 ===== */
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            padding: 32px 36px;
+            margin: 28px 0;
+            box-shadow: 0 8px 40px var(--shadow);
+            transition: transform var(--transition), box-shadow var(--transition);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 56px rgba(0, 0, 0, 0.30);
+        }
+
+        .section-title {
+            font-size: 1.7rem;
+            font-weight: 700;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--primary);
+        }
+
+        .section-title i {
+            font-size: 1.5rem;
+            color: var(--secondary);
+        }
+
+        .section-desc {
+            font-size: 0.98rem;
+            opacity: 0.8;
+            margin-bottom: 22px;
+            line-height: 1.6;
+        }
+
+        /* ===== 支付方式 ===== */
+        .payment-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .payment-method {
+            flex: 1;
+            min-width: 260px;
+            max-width: 380px;
+            text-align: center;
+            padding: 12px 0;
+        }
+
+        .payment-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .payment-title.wechat {
+            color: #07c160;
+        }
+        .payment-title.alipay {
+            color: #1677ff;
+        }
+
+        .qrcode-container {
+            background: rgba(255, 255, 255, 0.96);
+            border-radius: 16px;
+            padding: 18px;
+            display: inline-block;
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+            transition: transform var(--transition), box-shadow var(--transition);
+        }
+
+        .qrcode-container:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 36px rgba(0, 0, 0, 0.20);
+        }
+
+        .qrcode {
+            width: 200px;
+            height: 200px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+
+        .qrcode img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+
+        .payment-desc {
+            margin-top: 14px;
+            font-size: 0.92rem;
+            opacity: 0.75;
+            letter-spacing: 0.3px;
+        }
+
+        .payment-desc i {
+            margin-right: 6px;
+        }
+
+        /* ===== 页脚 ===== */
+        footer {
+            text-align: center;
+            padding: 40px 20px 20px;
+            margin-top: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            font-size: 0.85rem;
+            opacity: 0.55;
+            line-height: 1.8;
+        }
+
+        footer .footer-heart {
+            color: var(--primary);
+        }
+
+        /* ===== 动画 ===== */
+        @keyframes float {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes pulse {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.15);
+            }
+        }
+
+        .floating {
+            animation: float 5s ease-in-out infinite;
+        }
+
+        /* ===== 响应式 ===== */
+        @media (max-width: 768px) {
+            .container {
+                padding: 16px;
+            }
+
+            .lang-switch {
+                top: 14px;
+                right: 16px;
+                padding: 3px;
+            }
+
+            .lang-btn {
+                font-size: 0.75rem;
+                padding: 5px 12px;
+            }
+
+            .logo {
+                font-size: 2.4rem;
+            }
+            .logo i {
+                font-size: 2rem;
+            }
+
+            .subtitle {
+                font-size: 1rem;
+                padding: 0 6px;
+            }
+
+            .glass-card {
+                padding: 22px 18px;
+                margin: 18px 0;
+            }
+
+            .section-title {
+                font-size: 1.35rem;
+            }
+
+            .payment-method {
+                min-width: 100%;
+                max-width: 100%;
+            }
+
+            .qrcode {
+                width: 160px;
+                height: 160px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 1.9rem;
+            }
+            .logo i {
+                font-size: 1.6rem;
+            }
+            .subtitle {
+                font-size: 0.92rem;
+            }
+            .section-title {
+                font-size: 1.2rem;
+            }
+            .qrcode {
+                width: 140px;
+                height: 140px;
+            }
+            .payment-title {
+                font-size: 1.1rem;
+            }
+            .glass-card {
+                padding: 18px 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== 语言切换 ===== -->
+    <div class="lang-switch" role="group" aria-label="语言切换">
+        <button class="lang-btn active" data-lang="zh" aria-label="切换到中文">中</button>
+        <button class="lang-btn" data-lang="en" aria-label="Switch to English">EN</button>
+    </div>
+
+    <!-- ===== 主容器 ===== -->
+    <div class="container">
+
+        <!-- ===== 头部 ===== -->
+        <header>
+            <h1 class="logo floating">
+                <i class="fas fa-mug-hot"></i> <span data-i18n="title">Buy Me a Coffee</span>
+            </h1>
+            <p class="subtitle" data-i18n="subtitle">
+                如果你喜欢我的插件或服务端作品，欢迎请我喝杯咖啡！你的支持是我持续开发的动力 <span class="heart">❤️</span>
+            </p>
+        </header>
+
+        <!-- ===== 支付方式 ===== -->
+        <section class="glass-card">
+            <h2 class="section-title">
+                <i class="fas fa-donate"></i> <span data-i18n="supportTitle">请我喝咖啡</span>
+            </h2>
+            <p class="section-desc" data-i18n="supportDesc">
+                您可以通过以下方式支持我的开发工作，没有金额限制喵 ~
+            </p>
+
+            <div class="payment-section">
+                <!-- 微信 -->
+                <div class="payment-method">
+                    <h3 class="payment-title wechat">
+                        <i class="fab fa-weixin"></i> <span data-i18n="wechat">微信支付</span>
+                    </h3>
+                    <div class="qrcode-container">
+                        <div class="qrcode">
+                            <img src="./WeChat/We.png" alt="微信收款二维码" />
+                        </div>
+                    </div>
+                    <p class="payment-desc" data-i18n="wechatDesc">
+                        <i class="fas fa-qrcode"></i> 打开微信扫描二维码
+                    </p>
+                </div>
+
+                <!-- 支付宝 -->
+                <div class="payment-method">
+                    <h3 class="payment-title alipay">
+                        <i class="fab fa-alipay"></i> <span data-i18n="alipay">支付宝</span>
+                    </h3>
+                    <div class="qrcode-container">
+                        <div class="qrcode">
+                            <img src="./WeChat/Zhi.png" alt="支付宝收款二维码" />
+                        </div>
+                    </div>
+                    <p class="payment-desc" data-i18n="alipayDesc">
+                        <i class="fas fa-qrcode"></i> 打开支付宝扫描二维码
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== 页脚 ===== -->
+        <footer>
+            <p data-i18n="footer">© 2026 Buy Me a Coffee &nbsp;|&nbsp; 感谢每一位支持者 <span class="footer-heart">❤️</span></p>
+            <p data-i18n="footerSub" style="margin-top:6px; font-size:0.75rem; opacity:0.6;">
+                本页面仅用于展示赞助信息，不存储任何支付数据
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // ============================================================
+        //  1. 多语言文案
+        // ============================================================
+        const i18n = {
+            zh: {
+                title: 'Buy Me a Coffee',
+                subtitle: '如果你喜欢我的插件或服务端作品，欢迎请我喝杯咖啡！你的支持是我持续开发的动力 ❤️',
+                supportTitle: '请我喝咖啡',
+                supportDesc: '您可以通过以下方式支持我的开发工作，没有金额限制喵 ~',
+                wechat: '微信支付',
+                alipay: '支付宝',
+                wechatDesc: '打开微信扫描二维码',
+                alipayDesc: '打开支付宝扫描二维码',
+                footer: '© 2026 Buy Me a Coffee ｜ 感谢每一位支持者 ❤️',
+                footerSub: '本页面仅用于展示赞助信息，不存储任何支付数据',
+            },
+            en: {
+                title: 'Buy Me a Coffee',
+                subtitle: 'If you enjoy my plugins or server works, feel free to buy me a coffee! Your support keeps me motivated ❤️',
+                supportTitle: 'Buy Me a Coffee',
+                supportDesc: 'You can support my development work through the following methods. No amount limit ~',
+                wechat: 'WeChat Pay',
+                alipay: 'Alipay',
+                wechatDesc: 'Scan with WeChat',
+                alipayDesc: 'Scan with Alipay',
+                footer: '© 2026 Buy Me a Coffee ｜ Thanks to all supporters ❤️',
+                footerSub: 'This page is for displaying sponsorship info only. No payment data is stored.',
+            }
+        };
+
+        // ============================================================
+        //  2. 状态
+        // ============================================================
+        let currentLang = 'zh';
+
+        // ============================================================
+        //  3. DOM 引用
+        // ============================================================
+        const langBtns = document.querySelectorAll('.lang-btn');
+
+        // ============================================================
+        //  4. 更新文案
+        // ============================================================
+        function updateTexts() {
+            const t = i18n[currentLang];
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (key && t[key] !== undefined) {
+                    el.textContent = t[key];
+                }
+            });
+        }
+
+        // ============================================================
+        //  5. 切换语言
+        // ============================================================
+        function setLanguage(lang) {
+            if (lang === currentLang) return;
+            currentLang = lang;
+
+            langBtns.forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.lang === lang);
+            });
+
+            updateTexts();
+            document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+        }
+
+        // ============================================================
+        //  6. 检测浏览器语言
+        // ============================================================
+        function detectBrowserLang() {
+            const langs = navigator.languages || [navigator.language];
+            for (const l of langs) {
+                if (l.startsWith('zh')) return 'zh';
+                if (l.startsWith('en')) return 'en';
+            }
+            return 'zh';
+        }
+
+        // ============================================================
+        //  7. 初始化
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            // 语言切换事件
+            langBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    setLanguage(this.dataset.lang);
+                });
+            });
+
+            // 自动检测并设置语言
+            const detected = detectBrowserLang();
+            setLanguage(detected);
+        });
+    </script>
+
+</body>
+</html>

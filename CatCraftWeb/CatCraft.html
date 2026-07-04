@@ -1,0 +1,1615 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CatCraft服务器 | Minecraft 1.21.11 高版本服务器</title>
+    <link rel="icon" href="images/favicon.png">
+    <meta name="description" content="CatCraft Minecraft 1.21.11 服务器，加入我们，与热爱Minecraft的玩家一起创造奇迹！">
+    
+   
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+      
+        :root {
+            --minecraft-green: #55FF55;
+            --minecraft-redstone: #FF5555;
+            --minecraft-diamond: #55FFFF;
+            --minecraft-emerald: #00AA00;
+            --minecraft-dark: #1E1E1E;
+            --minecraft-dark-2: #2A2A2A;
+            --minecraft-dark-3: #3A3A3A;
+            --minecraft-light: #F0F0F0;
+            --minecraft-gray: #AAAAAA;
+            --accent-primary: #FF5555; 
+            --accent-secondary: #55FFFF; 
+            --accent-tertiary: #55FF55; 
+        }
+        
+     
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--minecraft-light);
+            background-color: var(--minecraft-dark);
+            overflow-x: hidden;
+        }
+        
+      
+        .minecraft-font {
+            font-family: 'Minecraft', monospace;
+            letter-spacing: 1px;
+        }
+        
+        /* 全屏背景轮播 */
+        .hero-slideshow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        
+        .slide.active {
+            opacity: 1;
+        }
+        
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, 
+                rgba(30, 30, 30, 0.85) 0%,
+                rgba(30, 30, 30, 0.7) 50%,
+                rgba(30, 30, 30, 0.85) 100%);
+            z-index: 0;
+            backdrop-filter: blur(2px);
+        }
+        
+        /* 导航栏 - 毛玻璃效果 */
+        .navbar {
+            position: fixed;
+            top: -80px;
+            width: 100%;
+            background: rgba(42, 42, 42, 0.75);
+            -webkit-backdrop-filter: blur(15px) saturate(180%);
+            backdrop-filter: blur(15px) saturate(180%);
+            z-index: 1000;
+            padding: 0.8rem 0;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+            border-bottom: 2px solid rgba(255, 85, 85, 0.3);
+        }
+        
+        .navbar.visible {
+            top: 0;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        /* Logo样式 */
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .logo-img {
+            height: 50px; 
+            width: auto;
+            transition: transform 0.3s ease;
+        }
+        
+        .logo-img:hover {
+            transform: scale(1.05);
+        }
+        
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent-secondary);
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+        
+        .nav-links a {
+            color: var(--minecraft-gray);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            position: relative;
+        }
+        
+        .nav-links a:hover {
+            color: var(--minecraft-light);
+            background: rgba(255, 85, 85, 0.15);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--accent-primary);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+        
+        .nav-links a:hover::after {
+            width: 70%;
+        }
+        
+        /* 主要内容区域 */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* 英雄区域 */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            padding: 2rem;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .server-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            text-shadow: 3px 3px 0 #000;
+        }
+        
+        .server-title span {
+            color: var(--accent-primary);
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--minecraft-gray);
+            margin-bottom: 2.5rem;
+            line-height: 1.8;
+        }
+        
+        .server-ip {
+            display: inline-block;
+            background: rgba(255, 85, 85, 0.2);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--accent-primary);
+            padding: 1rem 2rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent-secondary);
+            margin-bottom: 2rem;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .server-ip span {
+            color: var(--minecraft-light);
+        }
+        
+        /* 行动按钮 */
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, var(--accent-primary), #FF2222);
+            color: white;
+            padding: 1rem 2.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 85, 85, 0.3);
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 85, 85, 0.5);
+        }
+        
+        .cta-button.secondary {
+            background: linear-gradient(135deg, var(--accent-secondary), #00AAAA);
+            box-shadow: 0 4px 15px rgba(85, 255, 255, 0.3);
+        }
+        
+        .cta-button.secondary:hover {
+            box-shadow: 0 6px 20px rgba(85, 255, 255, 0.5);
+        }
+        
+        /* 通用部分样式 */
+        section {
+            padding: 100px 0;
+            position: relative;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        
+        .section-title h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--accent-secondary);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: var(--accent-primary);
+            border-radius: 2px;
+        }
+        
+        .section-title p {
+            color: var(--minecraft-gray);
+            max-width: 600px;
+            margin: 1.5rem auto 0;
+            font-size: 1.1rem;
+        }
+        
+        /* 毛玻璃效果卡片 */
+        .glass-card {
+            background: rgba(42, 42, 42, 0.65);
+            backdrop-filter: blur(12px) saturate(180%);
+            -webkit-backdrop-filter: blur(12px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .glass-card:hover {
+            background: rgba(42, 42, 42, 0.8);
+            border-color: rgba(255, 85, 85, 0.3);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* 关于服务器 */
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            padding: 3rem;
+        }
+        
+        .server-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .feature-card {
+            padding: 2rem;
+            border-left: 4px solid var(--accent-primary);
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--accent-primary);
+            margin-bottom: 1rem;
+        }
+        
+        .feature-card h3 {
+            color: var(--accent-secondary);
+            margin-bottom: 1rem;
+        }
+        
+        /* 团队成员展示 - 已添加头像样式 */
+        .team-section {
+            padding: 4rem 0;
+        }
+        
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .team-member {
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .team-member:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent-secondary);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+        
+        .member-header {
+            padding: 2rem;
+            text-align: center;
+            background: rgba(30, 30, 30, 0.7);
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+        
+        /* 成员头像样式 */
+        .member-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            border: 4px solid var(--accent-primary);
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--minecraft-dark-2), var(--minecraft-dark-3));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .team-member:hover .member-avatar {
+            border-color: var(--accent-secondary);
+            transform: scale(1.05);
+        }
+        
+        /* 头像图片样式 */
+        .avatar-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        .team-member:hover .avatar-img {
+            transform: scale(1.1);
+        }
+        
+        /* 备用图标样式（当没有头像图片时显示） */
+        .avatar-icon {
+            font-size: 3.5rem;
+            color: var(--accent-secondary);
+        }
+        
+        /* 在线状态指示器 */
+        .online-status {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: var(--accent-tertiary);
+            border: 3px solid var(--minecraft-dark);
+            box-shadow: 0 0 10px rgba(85, 255, 85, 0.5);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(85, 255, 85, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(85, 255, 85, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(85, 255, 85, 0); }
+        }
+        
+        .member-name {
+            font-size: 1.5rem;
+            color: var(--accent-secondary);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        .member-role {
+            color: var(--accent-primary);
+            font-weight: bold;
+            font-size: 1.1rem;
+            padding: 0.3rem 1rem;
+            background: rgba(255, 85, 85, 0.15);
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+
+          .member-role-qingniaoweb {
+            color: var(--accent-primary);
+            font-weight: bold;
+            font-size: 1.1rem;
+            padding: 0.3rem 1rem;
+            background: rgba(255, 85, 85, 0.15);
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* 成员简介标签 */
+        .member-tags {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        .member-tag {
+            padding: 0.2rem 0.6rem;
+            background: rgba(85, 255, 255, 0.1);
+            border-radius: 12px;
+            font-size: 0.8rem;
+            color: var(--accent-secondary);
+        }
+        
+        .member-info {
+            padding: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .member-info p {
+            color: var(--minecraft-gray);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        
+        .member-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 0.5rem;
+            background: rgba(58, 58, 58, 0.3);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .stat-item:hover {
+            background: rgba(58, 58, 58, 0.5);
+            transform: translateY(-2px);
+        }
+        
+        .stat-value {
+            font-size: 1.3rem;
+            color: var(--accent-secondary);
+            font-weight: bold;
+            margin-bottom: 0.3rem;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--minecraft-gray);
+        }
+        
+        /* 服务器特色 */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .feature-item {
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .feature-item:hover {
+            border-color: var(--accent-tertiary);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .feature-item h3 {
+            color: var(--accent-tertiary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        /* 联系方式/服务器信息 */
+        .contact-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+        }
+        
+        .server-info {
+            padding: 2.5rem;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .server-info h3 {
+            color: var(--accent-secondary);
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+        }
+        
+        .info-item {
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .info-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(58, 58, 58, 0.7);
+            backdrop-filter: blur(5px);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-primary);
+            font-size: 1.2rem;
+        }
+        
+        .info-content h4 {
+            color: var(--minecraft-light);
+            margin-bottom: 0.25rem;
+        }
+        
+        .info-content p {
+            color: var(--minecraft-gray);
+        }
+        
+        .ip-box {
+            background: rgba(30, 30, 30, 0.7);
+            backdrop-filter: blur(10px);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 2px solid var(--accent-primary);
+            margin-top: 1rem;
+        }
+        
+        .ip-box code {
+            font-family: 'Courier New', monospace;
+            font-size: 1.2rem;
+            color: var(--accent-secondary);
+            display: block;
+            text-align: center;
+            padding: 0.5rem;
+        }
+        
+        .qq-group {
+            display: inline-block;
+            background: linear-gradient(135deg, #12B7F5, #0084FF);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 1rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .qq-group:hover {
+            transform: translateY(-3px);
+        }
+        
+        .community-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        /* 音乐播放器 - 固定在右下角 */
+        .music-player {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1001;
+            background: rgba(42, 42, 42, 0.85);
+            backdrop-filter: blur(15px) saturate(180%);
+            -webkit-backdrop-filter: blur(15px) saturate(180%);
+            border-radius: 50px;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 85, 85, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .music-player:hover {
+            background: rgba(42, 42, 42, 0.95);
+            transform: translateY(-5px);
+        }
+        
+        .music-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .music-btn {
+            background: none;
+            border: none;
+            color: var(--accent-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+        }
+        
+        .music-btn:hover {
+            background: rgba(85, 255, 255, 0.1);
+            transform: scale(1.1);
+        }
+        
+        .music-info {
+            max-width: 200px;
+        }
+        
+        .music-title {
+            color: var(--minecraft-light);
+            font-size: 0.9rem;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .music-artist {
+            color: var(--minecraft-gray);
+            font-size: 0.8rem;
+        }
+        
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .volume-slider {
+            width: 80px;
+            height: 4px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            outline: none;
+        }
+        
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--accent-primary);
+            cursor: pointer;
+        }
+        
+        .volume-icon {
+            color: var(--minecraft-gray);
+            font-size: 1.2rem;
+        }
+        
+        /* 页脚 */
+        footer {
+            background: rgba(42, 42, 42, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 3rem 0 1.5rem;
+            text-align: center;
+            border-top: 2px solid var(--accent-primary);
+        }
+        
+        .footer-logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--accent-secondary);
+            margin-bottom: 1.5rem;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            background: rgba(58, 58, 58, 0.7);
+            border-radius: 8px;
+            color: var(--minecraft-gray);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+        }
+        
+        .social-link:hover {
+            background: var(--accent-primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+        
+        .copyright {
+            color: var(--minecraft-gray);
+            margin-top: 2rem;
+            font-size: 0.9rem;
+        }
+        
+        /* 滚动指示器 */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--minecraft-gray);
+            font-size: 0.9rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            animation: bounce 2s infinite;
+        }
+        
+        .scroll-indicator i {
+            font-size: 1.5rem;
+            color: var(--accent-primary);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .server-title {
+                font-size: 2.5rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .about-content,
+            .contact-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .team-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 0 1rem;
+            }
+            
+            .music-player {
+                bottom: 10px;
+                right: 10px;
+                padding: 8px 15px;
+            }
+            
+            .music-info {
+                max-width: 150px;
+            }
+            
+            .volume-slider {
+                width: 60px;
+            }
+            
+            .member-avatar {
+                width: 100px;
+                height: 100px;
+            }
+        }
+        
+        /* 动画 */
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0) translateX(-50%);
+            }
+            40% {
+                transform: translateY(-10px) translateX(-50%);
+            }
+            60% {
+                transform: translateY(-5px) translateX(-50%);
+            }
+        }
+        
+        /* 方块样式 */
+        .minecraft-block {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            background: var(--accent-primary);
+            margin: 0 5px;
+            vertical-align: middle;
+            border-radius: 2px;
+        }
+        
+        .block-redstone { background: #FF5555; }
+        .block-diamond { background: #55FFFF; }
+        .block-emerald { background: #00AA00; }
+        .block-iron { background: #AAAAAA; }
+    </style>
+</head>
+<body>
+    <!-- 音乐播放器 -->
+    <div class="music-player" id="musicPlayer">
+        <div class="music-controls">
+            <button class="music-btn" id="playPauseBtn">
+                <i class="fas fa-play" id="playIcon"></i>
+            </button>
+        </div>
+        <div class="music-info">
+            <div class="music-title" id="musicTitle">C418 - Minecraft</div>
+            <div class="music-artist" id="musicArtist">游戏原声音乐</div>
+        </div>
+        <div class="volume-control">
+            <i class="fas fa-volume-up volume-icon"></i>
+            <input type="range" min="0" max="100" value="50" class="volume-slider" id="volumeSlider">
+        </div>
+    </div>
+    
+    <!-- 全屏背景轮播 - 生电服务器相关图片 -->
+    <div class="hero-slideshow">
+        <div class="slide active" style="background-image: url('./pb/2026-01-21_06.41.36.png');"></div>
+        <div class="slide" style="background-image: url('./pb/2026-01-21_06.37.58.png');"></div>
+        <div class="slide" style="background-image: url('./pb/2026-01-21_06.38.33.png');"></div>
+        <div class="slide" style="background-image: url('./pb/2026-01-21_06.40.49.png');"></div>
+        <div class="slide" style="background-image: url('./pb/2026-01-16_23.26.16.png');"></div>
+        <div class="hero-overlay"></div>
+    </div>
+    
+    <!-- 导航栏 -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="logo-container">
+                <img src="./CatCraft/CatCraft.png" 
+                     alt="CatCraft服务器Logo" 
+                     class="logo-img">
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home">首页</a></li>
+                <li><a href="#about">关于服务器</a></li>
+                <li><a href="#team">核心团队</a></li>
+                <li><a href="#features">服务器特色</a></li>
+                <li><a href="./Buy_Me_a_Coffee/Buy_Me_a_Coffee.html">赞助我们</a></li>
+                <li><a href="http://web.catcraft.online/">团队详情</a></li>
+                <li><a href="./Eula/index.html">EULA</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <!-- 主要内容区域 -->
+    <main>
+        <!-- 首页英雄区域 -->
+        <section id="home" class="hero">
+            <div class="hero-content">
+                <h1 class="server-title">Cat<span>Craft</span> 
+                <p>CatCraft高版本生存·生电·小游戏服务器 与众多热爱Minecraft的玩家一起创造不可能！</p>
+                
+                <div class="server-ip glass-card">
+                    <i class="fas fa-server"></i> 服务器IP: <span id="serverIpText">Mc.CatCraft.Online</span>
+                    <button onclick="copyServerIP()" style="background: none; border: none; color: var(--accent-secondary); margin-left: 10px; cursor: pointer;">
+                        <i class="far fa-copy"></i>
+                    </button>
+                </div>
+                
+                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                    <a href="#contact" class="cta-button">
+                        <i class="fas fa-gamepad"></i> 立即加入
+                    </a>
+                    <a href="https://qm.qq.com/cgi-bin/qm/qr?k=cPmK9X80SOP82p4H8UXrx_SxXIzl6Pe6&jump_from=webapi&authKey=gaxGd9cTzZAgbfj8gv96JI8pQLQzAaHG52tfrOlv83r7D67kmOghnH70uvfWFXYf" target="_blank" class="cta-button secondary">
+                        <i class="fab fa-qq"></i> 加入QQ群
+                    </a>
+                </div>
+            </div>
+            <div class="scroll-indicator">
+                <span>向下滚动了解更多</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+        </section>
+        
+        <!-- 关于服务器 -->
+        <section id="about">
+            <div class="container">
+                <div class="section-title">
+                    <h2><i class="fas fa-info-circle"></i> 关于服务器</h2>
+                    <p>一个专注于Minecraft高版本的服务器</p>
+                </div>
+                
+                <div class="about-content glass-card">
+                    <div>
+                        <h3 style="color: var(--accent-secondary); margin-bottom: 1rem;">服务器简介</h3>
+                        <p style="color: var(--minecraft-gray); margin-bottom: 1.5rem;">
+                            我们是一个成立于2026年的Minecraft高版本服务器，致力于为全球Minecraft爱好者提供一个专业、稳定、友好的技术交流平台。
+                        </p>
+                        <p style="color: var(--minecraft-gray); margin-bottom: 1.5rem;">
+                            服务器生存·生电模式采用原版生存模式，无任何破坏游戏平衡的插件，专注于红石科技、自动化农场、高效率生电装置的研究与建造。
+                        </p>
+                        <p style="color: var(--minecraft-gray);">
+                            我们可能定期举办建筑活动，尽全力为玩家提供最佳的生存体验。
+                        </p>
+                    </div>
+                    <div>
+                        <h3 style="color: var(--accent-secondary); margin-bottom: 1rem;">服务器特色</h3>
+                        <ul style="color: var(--minecraft-gray); list-style: none; padding-left: 0;">
+                            <li style="margin-bottom: 0.8rem;"><i class="fas fa-check" style="color: var(--accent-tertiary); margin-right: 10px;"></i> 100%原版生存，无OP物品</li>
+                            <li style="margin-bottom: 0.8rem;"><i class="fas fa-check" style="color: var(--accent-tertiary); margin-right: 10px;"></i> 24小时在线，无神权</li>
+                            <li style="margin-bottom: 0.8rem;"><i class="fas fa-check" style="color: var(--accent-tertiary); margin-right: 10px;"></i> 定期备份，数据安全有保障</li>
+                            <li style="margin-bottom: 0.8rem;"><i class="fas fa-check" style="color: var(--accent-tertiary); margin-right: 10px;"></i> 服务器未开启正版验证，离线玩家也可以来游玩</li>
+                            <li style="margin-bottom: 0.8rem;"><i class="fas fa-check" style="color: var(--accent-tertiary); margin-right: 10px;"></i> 公平的游戏环境，禁止作弊</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="server-features">
+                    <div class="feature-card glass-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-cogs"></i>
+                        </div>
+                        <h3>生电机器</h3>
+                        <p>服务器可以让大家自由建造各种生电机器</p>
+                    </div>
+                    <div class="feature-card glass-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-leaf"></i>
+                        </div>
+                        <h3>自由生存</h3>
+                        <p>可能你并不是生电玩家，你也可以在这里安静的生存或者养老</p>
+                    </div>
+                    <div class="feature-card glass-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3>正版验证OFF</h3>
+                        <p>服务器的正版验证并为启用，但是服务器装有离线皮肤加载，可以让更多的玩家前来体验</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+  
+        <section id="team" class="team-section">
+            <div class="container">
+                <div class="section-title">
+                    <h2><i class="fas fa-users"></i> 核心团队</h2>
+                    <p>认识我们的技术团队和管理团队</p>
+                </div>
+                
+                <div class="team-grid">
+                  
+                    <div class="team-member glass-card">
+                        <div class="member-header">
+                            <div class="member-avatar">
+                              
+                                <img src="./avatars/Qingniao.png" alt="QingNiao的头像" class="avatar-img" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\"fas fa-crown avatar-icon\></i>
+                                <div class="online-status"></div>
+                            </div>
+                            <h3 class="member-name">QingNiao</h3>
+                            <div class="member-role">CatCraft所有者 & 服务器技术</div>
+                           <a href="http://web.catcraft.online/" target="_blank" class="member-role-qingniaoweb">点击查看个人网页</a>
+                     
+                            
+                            <div class="member-tags">
+                                <span class="member-tag">服务端开发</span>
+                                <span class="member-tag">运维管理</span>
+                                <span class="member-tag">网页开发</span>
+                            </div>
+                        </div>
+                        <div class="member-info">
+                            <p>拥有4年Minecraft服务端生草开发经验，负责服务端的主要开发，网页开发，服务器运维，服务器建筑。</p>
+                            <div class="member-stats">
+                                <div class="stat-item">
+                                    <div class="stat-value">4年</div>
+                                    <div class="stat-label">开发经验</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value">18</div>
+                                    <div class="stat-label">项目完成</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value">9年</div>
+                                    <div class="stat-label">MC经验</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value">在线</div>
+                                    <div class="stat-label">状态</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                   
+                    <div class="team-member glass-card">
+                        <div class="member-header">
+                            <div class="member-avatar">
+                              
+                                <img src="./avatars/zhangziyi.png" alt="ZhangZiYi的头像" class="avatar-img" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\"fas fa-tools avatar-icon\></i>
+                                <div class="online-status"></div>
+                            </div>
+                            <h3 class="member-name">ZhangZiYi</h3>
+                            <div class="member-role">客服</div>
+                            <div class="member-tags">
+                                <span class="member-tag">玩家帮助</span>
+                                <span class="member-tag">BUG反馈</span>
+                                <span class="member-tag">赞助</span>
+                            </div>
+                        </div>
+                        <div class="member-info">
+                            <p>专注于服务器问题解疑，服务器BUG反馈，玩家如果有问题或者其他生存方面的疑惑请找TA。</p>
+                            <div class="member-stats">
+                                <div class="stat-item">
+                                    <div class="stat-value">3年</div>
+                                    <div class="stat-label">客服经验</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value">91%</div>
+                                    <div class="stat-label">好评如潮</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value">5年</div>
+                                    <div class="stat-label">MC经验</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value">在线</div>
+                                    <div class="stat-label">状态</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+        
+                    
+
+                     <div class="team-member glass-card">
+                        <div class="member-header">
+                            <div class="member-avatar">
+                              
+                                <img src="./avatars/46.png" alt="yaomeg520QWQ的头像" class="avatar-img" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\"fas fa-hammer avatar-icon\></i>
+                                <div class="online-status"></div>
+                            </div>
+                            <h3 class="member-name">yaomeg520QWQ</h3>
+                            <div class="member-role">服务器建筑师</div>
+                            <div class="member-tags">
+                                <span class="member-tag">服务器建筑师</span>
+                                <span class="member-tag">建筑设计</span>
+                            </div>
+                        </div>
+                        <div class="member-info">
+                            <p>负责服务器的建筑，为服务器添加新的光彩，画龙点睛。</p>
+                            <div class="member-stats">
+                                <div class="stat-item">
+                                    <div class="stat-value">100+</div>
+                                    <div class="stat-label">建筑数量</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value">50+</div>
+                                    <div class="stat-label">设计数量</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value">50+</div>
+                                    <div class="stat-label">项目数量</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value">在线</div>
+                                    <div class="stat-label">状态</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                   
+                    <div class="team-member glass-card">
+                        <div class="member-header">
+                            <div class="member-avatar">
+                               
+                                <img src="./avatars/com.png" alt="CommunityMgr的头像" class="avatar-img" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\"fas fa-headset avatar-icon\></i>
+                                <div class="online-status"></div>
+                            </div>
+                            <h3 class="member-name">暂时没有（我们需要）</h3>
+                            <div class="member-role">服务端开发</div>
+                            <div class="member-tags">
+                                <span class="member-tag">服务端开发</span>
+                                <span class="member-tag">服务端开发</span>
+                                <span class="member-tag">服务端开发</span>
+                            </div>
+                        </div>
+                        <div class="member-info">
+                            <p>负责服务器日常运营，服务端开发和社区管理，组织活动、解决玩家问题、维护和谐的社区环境。热心帮助新玩家适应服务器。</p>
+                            <div class="member-stats">
+                                <div class="stat-item">
+                                    <div class="stat-value">N/A</div>
+                                    <div class="stat-label">活跃玩家</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value">N/A</div>
+                                    <div class="stat-label">在线支持</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value">N/A</div>
+                                    <div class="stat-label">活动举办</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value">在线</div>
+                                    <div class="stat-label">状态</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+             
+                
+            </div>
+        </section>
+        
+        <!-- 服务器特色 -->
+        <section id="features">
+            <div class="container">
+                <div class="section-title">
+                    <h2><i class="fas fa-star"></i> 服务器特色</h2>
+                    <p>我们提供的独特游戏体验</p>
+                </div>
+                
+                <div class="features-grid">
+                    <div class="feature-item glass-card">
+                        <h3><i class="fas fa-microchip"></i> 不限制生电</h3>
+                        <p>服务器不限制生电机器（包括刷沙机）除了崩服机，其他一律不限制。</p>
+                    </div>
+                    <div class="feature-item glass-card">
+                        <h3><i class="fas fa-industry"></i> 服务器未开启正版验证</h3>
+                        <p>服务器没有开启正版验证，离线玩家也可以来游玩。</p>
+                    </div>
+                    <div class="feature-item glass-card">
+                        <h3><i class="fas fa-seedling"></i> 生存也可以呢！</h3>
+                        <p>来生存养老也可以呀！</p>
+                    </div>
+                    <div class="feature-item glass-card">
+                        <h3><i class="fas fa-trophy"></i> 活动举办</h3>
+                        <p>服务器会不定时举办活动，参加的有独特称号！</p>
+                    </div>
+                    <div class="feature-item glass-card">
+                        <h3><i class="fas fa-graduation-cap"></i> 新手教学</h3>
+                        <p>如果你有不懂的地方可以直接进群@服务器服主，TA亲自回答你。</p>
+                    </div>
+                    <div class="feature-item glass-card">
+                        <h3><i class="fas fa-shield-alt"></i> 只接受赞助！</h3>
+                        <p>服务器没有任何付费形式，我们纯纯为爱发电，只接受各位玩家（义父）们的赞助。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 加入我们 -->
+        <section id="contact">
+            <div class="container">
+                <div class="section-title">
+                    <h2><i class="fas fa-gamepad"></i> 加入我们</h2>
+                    <p>立即加入我们的社区</p>
+                </div>
+                
+                <div class="contact-content">
+                    <div class="server-info glass-card">
+                        <h3>服务器信息</h3>
+                        
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-server"></i>
+                            </div>
+                            <div class="info-content">
+                                <h4>服务器地址</h4>
+                                <div class="ip-box">
+                                    <code id="ipDisplay">Mc.CatCraft.Online</code>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-plug"></i>
+                            </div>
+                            <div class="info-content">
+                                <h4>服务器版本</h4>
+                                <p>Java版 1.21.1</p>
+                            </div>
+                        </div>
+                        
+                        
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fab fa-qq"></i>
+                            </div>
+                            <div class="info-content">
+                                <h4>官方QQ群</h4>
+                                <p>加入我们的QQ群获取最新消息和技术支持</p>
+                                <a href="https://qm.qq.com/cgi-bin/qm/qr?k=cPmK9X80SOP82p4H8UXrx_SxXIzl6Pe6&jump_from=webapi&authKey=gaxGd9cTzZAgbfj8gv96JI8pQLQzAaHG52tfrOlv83r7D67kmOghnH70uvfWFXYf" target="_blank" class="qq-group">
+                                    <i class="fab fa-qq"></i> 点击加入QQ群 (群号: 793503379)
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="server-info glass-card">
+                        <h3>快速开始指南</h3>
+                        
+                        <div style="margin-bottom: 2rem;">
+                            <h4 style="color: var(--accent-tertiary); margin-bottom: 1rem;">加入步骤:</h4>
+                            <ol style="color: var(--minecraft-gray); padding-left: 1.5rem;">
+                                <li style="margin-bottom: 0.8rem;">确保你的Minecraft是1.21.11</li>
+                                <li style="margin-bottom: 0.8rem;">在多人游戏中添加服务器</li>
+                                <li style="margin-bottom: 0.8rem;">输入服务器地址: <code>Mc.CatCraft.Online</code></li>
+                                <li style="margin-bottom: 0.8rem;">点击加入服务器</li>
+                                <li>首次加入请阅读服务器规则</li>
+                            </ol>
+                        </div>
+                        
+                        <div>
+                            <h4 style="color: var(--accent-tertiary); margin-bottom: 1rem;">社区链接:</h4>
+                            <div class="community-links">
+    
+                                <a href="https://qm.qq.com/cgi-bin/qm/qr?k=cPmK9X80SOP82p4H8UXrx_SxXIzl6Pe6&jump_from=webapi&authKey=gaxGd9cTzZAgbfj8gv96JI8pQLQzAaHG52tfrOlv83r7D67kmOghnH70uvfWFXYf" class="social-link">
+                                    <i class="fab fa-qq"></i>
+                                </a>
+                                <a href="https://space.bilibili.com/1622211276?spm_id_from=333.1007.0.0" class="social-link">
+                                    <i class="fab fa-bilibili"></i>
+                                </a>
+                                <a href="https://github.com/qingniaoQwQ" class="social-link">
+                                    <i class="fab fa-github"></i>
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 2rem; padding: 1rem; background: rgba(255, 85, 85, 0.1); border-radius: 8px; backdrop-filter: blur(5px);">
+                            <h4 style="color: var(--accent-primary); margin-bottom: 0.5rem;"><i class="fas fa-exclamation-triangle"></i> 重要提示</h4>
+                            <p style="color: var(--minecraft-gray); font-size: 0.9rem;">
+                                请遵守服务器规则，禁止使用任何作弊客户端或利用游戏漏洞。违规者将被永久封禁。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- 页脚 -->
+    <footer>
+        <div class="container">
+            <div class="footer-logo">CatCraft</div>
+            <p style="color: var(--minecraft-gray); max-width: 600px; margin: 0 auto 1.5rem;">
+                一个专注于Minecraft高版本的服务器。我们致力于为热爱Minecraft玩家提供最佳的高版本体验。
+            </p>
+            
+            <div class="social-links">
+                <a href="https://qm.qq.com/cgi-bin/qm/qr?k=cPmK9X80SOP82p4H8UXrx_SxXIzl6Pe6&jump_from=webapi&authKey=gaxGd9cTzZAgbfj8gv96JI8pQLQzAaHG52tfrOlv83r7D67kmOghnH70uvfWFXYf" target="_blank" class="social-link">
+                    <i class="fab fa-qq"></i>
+                </a>
+              
+                <a href="https://space.bilibili.com/1622211276?spm_id_from=333.1007.0.0" class="social-link">
+                    <i class="fab fa-bilibili"></i>
+                </a>
+                <a href="https://github.com/qingniaoQwQ" class="social-link">
+                    <i class="fab fa-github"></i>
+                </a>
+            </div>
+            
+            <div style="margin: 2rem 0; padding: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.1); border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+                <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 2rem;">
+                    <a href="./Eula/index.html" style="color: var(--minecraft-gray); text-decoration: none;">服务器Eula</a>
+                    <a href="./Buy_Me_a_Coffee/Buy_Me_a_Coffee.html" style="color: var(--minecraft-gray); text-decoration: none;">赞助我们</a>
+                    <a href="http://web.catcraft.online/" style="color: var(--minecraft-gray); text-decoration: none;">服务器团队详情</a>
+                </div>
+            </div>
+            
+            <p class="copyright">
+                &copy; 2026 CatCraft 服务器. 保留所有权利. 
+                <br>
+                Minecraft是Mojang AB的商标。本服务器与Mojang/Microsoft无关。
+            </p>
+        </div>
+    </footer>
+    
+ 
+    <audio id="backgroundMusic" loop>
+
+        <source src="./pb/C418 - Minecraft.mp3" type="audio/mpeg">
+        <source src="./pb/C418 - Minecraft.mp3" type="audio/ogg">
+        您的浏览器不支持音频元素。
+    </audio>
+    
+    <script>
+        // 背景轮播功能
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        
+        function nextSlide() {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + 1) % totalSlides;
+            slides[currentSlide].classList.add('active');
+        }
+        
+        setInterval(nextSlide, 3000);
+        
+   
+        const navbar = document.getElementById('navbar');
+        let lastScrollTop = 0;
+        
+        window.addEventListener('scroll', function() {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            if (scrollTop > 100) {
+                navbar.classList.add('visible');
+            } else {
+                navbar.classList.remove('visible');
+            }
+            
+            lastScrollTop = scrollTop;
+        });
+        
+
+        function copyServerIP() {
+            const ip = document.getElementById('serverIpText').textContent;
+            navigator.clipboard.writeText(ip).then(() => {
+                alert('服务器IP已复制到剪贴板: ' + ip);
+            });
+        }
+        
+ 
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+    
+        window.addEventListener('load', function() {
+            document.body.style.opacity = '0';
+            document.body.style.transition = 'opacity 0.5s ease-in';
+            
+            setTimeout(() => {
+                document.body.style.opacity = '1';
+            }, 100);
+            
+          
+            initializeMusicPlayer();
+        });
+        
+       
+
+        setInterval(updatePlayerCount, 30000); 
+        updatePlayerCount(); 
+        
+        let isPlaying = false;
+        const audio = document.getElementById('backgroundMusic');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const playIcon = document.getElementById('playIcon');
+        const volumeSlider = document.getElementById('volumeSlider');
+        const musicTitle = document.getElementById('musicTitle');
+        const musicArtist = document.getElementById('musicArtist');
+        const musicPlayer = document.getElementById('musicPlayer');
+        
+        // 音乐播放列表（可以添加更多音乐）
+        const playlist = [
+            {
+                title: "C418 - Minecraft",
+                artist: "游戏原声音乐",
+                src: "music.mp3"
+            }
+        ];
+        
+        function initializeMusicPlayer() {
+            // 设置音量
+            audio.volume = volumeSlider.value / 100;
+            
+            // 设置默认音乐信息
+            if (playlist.length > 0) {
+                musicTitle.textContent = playlist[0].title;
+                musicArtist.textContent = playlist[0].artist;
+            }
+            
+            // 检查音乐文件是否存在
+            audio.addEventListener('error', function(e) {
+                console.log('音频加载失败:', e);
+                musicTitle.textContent = "音乐文件未找到";
+                musicArtist.textContent = "请检查music.mp3文件";
+                playPauseBtn.disabled = true;
+            });
+            
+            // 音乐播放状态变化
+            audio.addEventListener('play', function() {
+                isPlaying = true;
+                playIcon.className = 'fas fa-pause';
+                musicPlayer.style.borderColor = 'rgba(85, 255, 255, 0.5)';
+            });
+            
+            audio.addEventListener('pause', function() {
+                isPlaying = false;
+                playIcon.className = 'fas fa-play';
+                musicPlayer.style.borderColor = 'rgba(255, 85, 85, 0.2)';
+            });
+            
+            // 自动播放（需要用户交互后）
+            document.addEventListener('click', function initializeAudio() {
+                if (!audio.src) return;
+                
+                // 尝试播放
+                audio.play().then(() => {
+                    // 成功播放后暂停，等待用户点击播放
+                    audio.pause();
+                    isPlaying = false;
+                    playIcon.className = 'fas fa-play';
+                    
+                    // 移除事件监听器
+                    document.removeEventListener('click', initializeAudio);
+                }).catch(e => {
+                    console.log('自动播放被阻止:', e);
+                });
+            }, { once: true });
+        }
+        
+        // 播放/暂停按钮
+        playPauseBtn.addEventListener('click', function() {
+            if (isPlaying) {
+                audio.pause();
+            } else {
+                audio.play().catch(e => {
+                    console.log('播放失败:', e);
+                    alert('无法播放音乐，请检查音乐文件是否存在。');
+                });
+            }
+        });
+        
+        // 音量控制
+        volumeSlider.addEventListener('input', function() {
+            audio.volume = this.value / 100;
+            
+            // 根据音量改变图标
+            const volumeIcon = document.querySelector('.volume-icon');
+            if (this.value == 0) {
+                volumeIcon.className = 'fas fa-volume-mute volume-icon';
+            } else if (this.value < 50) {
+                volumeIcon.className = 'fas fa-volume-down volume-icon';
+            } else {
+                volumeIcon.className = 'fas fa-volume-up volume-icon';
+            }
+        });
+        
+        // 双击音乐播放器切换歌曲
+        let clickCount = 0;
+        musicPlayer.addEventListener('click', function(e) {
+            // 如果不是播放/暂停按钮
+            if (!e.target.closest('.music-controls')) {
+                clickCount++;
+                
+                if (clickCount === 1) {
+                    setTimeout(() => {
+                        if (clickCount === 2) {
+                            // 双击事件 - 切换下一首
+                            nextTrack();
+                        }
+                        clickCount = 0;
+                    }, 300);
+                }
+            }
+        });
+        
+    
+        function nextTrack() {
+     
+            audio.currentTime = 0;
+            if (!isPlaying) {
+                audio.play();
+            }
+        }
+        
+
+        document.addEventListener('keydown', function(e) {
+       
+            if (e.code === 'Space' && !e.target.matches('input, textarea')) {
+                e.preventDefault();
+                playPauseBtn.click();
+            }
+            
+        
+            if (e.code === 'ArrowLeft' && e.ctrlKey) {
+                e.preventDefault();
+                volumeSlider.value = Math.max(0, parseInt(volumeSlider.value) - 10);
+                volumeSlider.dispatchEvent(new Event('input'));
+            }
+            
+         
+            if (e.code === 'ArrowRight' && e.ctrlKey) {
+                e.preventDefault();
+                volumeSlider.value = Math.min(100, parseInt(volumeSlider.value) + 10);
+                volumeSlider.dispatchEvent(new Event('input'));
+            }
+        });
+        
+    </script>
+</body>
+
+</html>
+
+
+
+
